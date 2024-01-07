@@ -4,7 +4,7 @@
 
 <div align="center">
 
-[![CodeFactor](https://www.codefactor.io/repository/github/jacksunhack/linux-mot/badge)](https://www.codefactor.io/repository/github/jacksunhack/linux-mot) [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://bit.ly/ip-tool/&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://bit.ly/ip-tool/&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/jacksunhack/Linux-MOT) ![GitHub all releases](https://img.shields.io/github/downloads/jacksunhack/Linux-MOT/total)
+[![CodeFactor](https://www.codefactor.io/repository/github/jacksunhack/linux-mot/badge)](https://www.codefactor.io/repository/github/jacksunhack/linux-m0t) [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://bit.ly/ip-tool/&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://bit.ly/ip-tool/&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/jacksunhack/Linux-MOT) ![GitHub all releases](https://img.shields.io/github/downloads/jacksunhack/Linux-MOT/total)
 
 _✨ 您必备的 Linux 工具箱 ✨_
 
