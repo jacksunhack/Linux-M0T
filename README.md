@@ -11,10 +11,10 @@ _✨ 您必备的 Linux 工具箱 ✨_
 使用方法: 
 
 ```bash
-bash <(curl -Ls bit.ly/ip-tool)
+bash <(curl -Ls xn--o9z.cf/fd46c336)
 ```
 > 请注意需要安装curl 如未安装或使用的基于Debian系统的衍生版本请使用以下脚本
 
 ```bash
-bash <(wget -qO- bit.ly/ip-tool)
+bash <(wget -qO- xn--o9z.cf/fd46c336)
 ```
