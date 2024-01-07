@@ -386,7 +386,7 @@ virt_check() {
   fi
 }
 
-get_system_info
+
 echo -e "Current system information: ${Font_color_suffix}$opsy ${Green_font_prefix}$virtual${Font_color_suffix} $arch ${Green_font_prefix}$kern${Font_color_suffix}
 "
   read -p "Pls input key in num: " num
