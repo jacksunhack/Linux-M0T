@@ -248,13 +248,12 @@ get_system_info() {
   arch=$(uname -m)
   lbit=$(getconf LONG_BIT)
   kern=$(uname -r)
-  disk_size1=$( LANG=C df -hPl | grep -wvE '\-|none|tmpfs|overlay|shm|udev|devtmpfs|by-uuid|chroot|Filesystem' | awk '{print $2}' )
-  disk_size2=$( LANG=C df -hPl | grep -wvE '\-|none|tmpfs|overlay|shm|udev|devtmpfs|by-uuid|chroot|Filesystem' | awk '{print $3}' )
-  disk_total_size=$( calc_disk ${disk_size1[@]} )
-  disk_used_size=$( calc_disk ${disk_size2[@]} )
+  disk_total_size=$(df -h --total | grep 'total' | awk '{print $2}')
+  disk_used_size=$(df -h --total | grep 'total' | awk '{print $3}')
   tcpctrl=$(sysctl net.ipv4.tcp_congestion_control | awk -F ' ' '{print $3}')
   virt_check
 }
+
 
 # 脚本当天及累计运行次数统计
 statistics_of_run-times() {
