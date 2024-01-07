@@ -232,26 +232,60 @@ echo "供应商: $ORGANIZATION6"
 
 }
 
+# 系统信息收集
 get_system_info() {
-  cname=$(awk -F: '/model name/ {name=$2} END {print name}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
-  cores=$(awk -F: '/model name/ {core++} END {print core}' /proc/cpuinfo)
-  freq=$(awk -F: '/cpu MHz/ {freq=$2} END {print freq}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
-  corescache=$(awk -F: '/cache size/ {cache=$2} END {print cache}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
-  tram=$(free -m | awk '/Mem/ {print $2}')
-  uram=$(free -m | awk '/Mem/ {print $3}')
-  bram=$(free -m | awk '/Mem/ {print $6}')
-  swap=$(free -m | awk '/Swap/ {print $2}')
-  uswap=$(free -m | awk '/Swap/ {print $3}')
-  up=$(awk '{a=$1/86400;b=($1%86400)/3600;c=($1%3600)/60} {printf("%d days %d hour %d min\n",a,b,c)}' /proc/uptime)
-  load=$(w | head -1 | awk -F'load average:' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//')
-  opsy=$(get_opsy)
-  arch=$(uname -m)
-  lbit=$(getconf LONG_BIT)
-  kern=$(uname -r)
-  disk_total_size=$(df -h --total | grep 'total' | awk '{print $2}')
-  disk_used_size=$(df -h --total | grep 'total' | awk '{print $3}')
-  tcpctrl=$(sysctl net.ipv4.tcp_congestion_control | awk -F ' ' '{print $3}')
-  virt_check
+    # 收集CPU信息
+    cname=$(awk -F: '/model name/ {name=$2} END {print name}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
+    cores=$(awk -F: '/model name/ {core++} END {print core}' /proc/cpuinfo)
+    freq=$(awk -F: '/cpu MHz/ {freq=$2} END {print freq}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
+
+    # 收集内存信息
+    tram=$(free -m | awk '/Mem/ {print $2}')
+    uram=$(free -m | awk '/Mem/ {print $3}')
+    bram=$(free -m | awk '/Mem/ {print $6}')
+    swap=$(free -m | awk '/Swap/ {print $2}')
+    uswap=$(free -m | awk '/Swap/ {print $3}')
+
+    # 收集系统运行时间
+    up=$(awk '{a=$1/86400;b=($1%86400)/3600;c=($1%3600)/60} {printf("%d days %d hour %d min\n",a,b,c)}' /proc/uptime)
+
+    # 收集系统负载
+    load=$(w | head -1 | awk -F'load average:' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//')
+
+    # 收集操作系统版本
+    opsy=$(get_opsy)
+
+    # 收集架构信息
+    arch=$(uname -m)
+    kern=$(uname -r)
+
+    # 收集磁盘使用情况
+    disk_total_size=$(df -h --total | grep 'total' | awk '{print $2}')
+    disk_used_size=$(df -h --total | grep 'total' | awk '{print $3}')
+    
+    # 展示收集的信息
+    echo -e "${Green_font_prefix}CPU 名称:${Font_color_suffix} $cname"
+    echo -e "${Green_font_prefix}CPU 核心数:${Font_color_suffix} $cores"
+    echo -e "${Green_font_prefix}CPU 频率:${Font_color_suffix} $freq MHz"
+    echo -e "${Green_font_prefix}总内存:${Font_color_suffix} $tram MB"
+    echo -e "${Green_font_prefix}已用内存:${Font_color_suffix} $uram MB"
+    echo -e "${Green_font_prefix}空闲内存:${Font_color_suffix} $bram MB"
+    echo -e "${Green_font_prefix}交换空间总量:${Font_color_suffix} $swap MB"
+    echo -e "${Green_font_prefix}已用交换空间:${Font_color_suffix} $uswap MB"
+    echo -e "${Green_font_prefix}系统运行时间:${Font_color_suffix} $up"
+    echo -e "${Green_font_prefix}系统负载:${Font_color_suffix} $load"
+    echo -e "${Green_font_prefix}操作系统:${Font_color_suffix} $opsy"
+    echo -e "${Green_font_prefix}架构:${Font_color_suffix} $arch"
+    echo -e "${Green_font_prefix}内核版本:${Font_color_suffix} $kern"
+    echo -e "${Green_font_prefix}磁盘总大小:${Font_color_suffix} $disk_total_size"
+    echo -e "${Green_font_prefix}已用磁盘大小:${Font_color_suffix} $disk_used_size"
+}
+
+# 操作系统识别函数（需要在 get_system_info 中调用）
+get_opsy() {
+    [ -f /etc/redhat-release ] && awk '{print ($1,$3~/^[0-9]/?$3:$4)}' /etc/redhat-release && return
+    [ -f /etc/os-release ] && awk -F'[= "]' '/PRETTY_NAME/{print $3,$4,$5}' /etc/os-release && return
+    [ -f /etc/lsb-release ] && awk -F'[="]+' '/DESCRIPTION/{print $2}' /etc/lsb-release && return
 }
 
 
@@ -263,10 +297,11 @@ statistics_of_run-times() {
 
 menu() {
   echo -e "\
-${Green_font_prefix}0.${Font_color_suffix} 查看IP信息        ${Green_font_prefix}1.${Font_color_suffix} 安装BBR原版内核(已经是5.x的不需要) (待添加)
-${Green_font_prefix}2.${Font_color_suffix} TCP窗口调优       ${Green_font_prefix}3.${Font_color_suffix} 开启内核转发
-${Green_font_prefix}4.${Font_color_suffix} 系统资源限制调优  ${Green_font_prefix}5.${Font_color_suffix} 屏蔽ICMP          
-${Green_font_prefix}6.${Font_color_suffix} 开放ICMP          ${Green_font_prefix}7.${Font_color_suffix} 修改当前DNS为Google与CF
+${Green_font_prefix}0.${Font_color_suffix} 查看系统信息        ${Green_font_prefix}1.${Font_color_suffix} 安装BBR原版内核(已经是5.x的不需要) (待添加)
+${Green_font_prefix}2.${Font_color_suffix} 查看IP信息         ${Green_font_prefix}3.${Font_color_suffix}  (待添加)
+${Green_font_prefix}4.${Font_color_suffix} TCP窗口调优       ${Green_font_prefix}5.${Font_color_suffix} 开启内核转发
+${Green_font_prefix}6.${Font_color_suffix} 系统资源限制调优  ${Green_font_prefix}7.${Font_color_suffix} 屏蔽ICMP          
+${Green_font_prefix}8.${Font_color_suffix} 开放ICMP          ${Green_font_prefix}9.${Font_color_suffix} 修改当前DNS为Google与CF
 
 
 The script runs on today: $TODAY Total runs: ${YELLOW}$TOTAL
@@ -357,30 +392,36 @@ echo -e "Current system information: ${Font_color_suffix}$opsy ${Green_font_pref
   read -p "Pls input key in num: " num
   case "$num" in
   0)
-    get_ipinfo
+    get_system_info
     ;;
   1)
-    bbr
+    get_ipinfo
     ;;
   2)
-    tcp_tune
+    bbr
     ;;
   3)
-    enable_forwarding
+    echo "待添加！"
     ;;
   4)
-    ulimit_tune
+    tcp_tune
     ;;
   5)
-    banping
+    enable_forwarding
     ;;
   6)
-    unbanping
+    ulimit_tune
     ;;
   7)
-    Change_DNS
+    banping
     ;;
   8)
+    unbanping
+    ;;
+  9)
+    Change_DNS
+    ;;
+  10)
     Install_Coturn
     ;;
   *)
