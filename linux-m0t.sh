@@ -395,10 +395,10 @@ echo -e "Current system information: ${Font_color_suffix}$opsy ${Green_font_pref
     get_system_info
     ;;
   1)
-    get_ipinfo
+    echo "待添加！"
     ;;
   2)
-    bbr
+    get_ipinfo
     ;;
   3)
     echo "待添加！"
