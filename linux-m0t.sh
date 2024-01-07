@@ -434,8 +434,5 @@ echo -e "Current system information: ${Font_color_suffix}$opsy ${Green_font_pref
 }
 
 copyright
-
-statistics_of_run-times
-
 menu
 
